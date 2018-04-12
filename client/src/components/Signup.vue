@@ -59,7 +59,7 @@
                   <div class="field">
                     <label class="label">Confirm Password</label>
                     <div class="control has-icons-left has-icons-right">
-                      <input class="input" type="password" placeholder="supersecretpassword" name="confirmPassword" @change="checkPasswordMatch" v-model="user.confirmPassword" required>
+                      <input class="input" type="password" placeholder="supersecretpassword" name="confirmPassword" @change="checkPasswordMatch" v-model="confirmPassword" required>
                       <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
                       </span>
@@ -92,6 +92,8 @@
 
 
 <script>
+  import _ from 'lodash';
+
   export default {
     name: 'Signup',
     data() {
@@ -103,11 +105,20 @@
           password: '',
           confirmPassword: ''
         },
+        password: '',
+        confirmPassword: '',
         passwordsMatch: false,
         errors: {}
       }
     },
-    computed: {},
+    watch: {},
+    computed: {
+      confirmPassword() {
+        return _.debounce(function () {
+
+        })
+      }
+    },
     methods: {
       // Clean up method to alert as typing...
       // use watcher or computed instead of method check

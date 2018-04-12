@@ -34,6 +34,12 @@
                     <p class="help is-danger">This password is invalid</p>
                   </div>
 
+
+                  <!-- debounce test -->
+                  <input type="text" v-on:input="debounceInput" v-model="searchInput">
+
+
+
                   <div class="field is-grouped">
                     <div class="control">
                       <button class="button is-link">Submit</button>
@@ -55,10 +61,17 @@
 
 
 <script>
+  import _ from 'lodash';
+
   export default {
     name: 'Login',
     data() {
       return {}
+    },
+    methods: {
+      debounceInput: _.debounce(function () {
+        console.log("debounce test")
+      }, 1000)
     }
   }
 </script>
