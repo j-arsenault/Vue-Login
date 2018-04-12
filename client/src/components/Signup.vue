@@ -45,7 +45,7 @@
                   <div class="field">
                     <label class="label">Password</label>
                     <div class="control has-icons-left has-icons-right">
-                      <input class="input" type="password" placeholder="supersecretpassword" name="password"  @change="checkPasswordMatch" v-model="user.password" required>
+                      <input class="input" type="password" placeholder="supersecretpassword" name="password" v-model="user.password" required>
                       <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
                       </span>
@@ -59,7 +59,7 @@
                   <div class="field">
                     <label class="label">Confirm Password</label>
                     <div class="control has-icons-left has-icons-right">
-                      <input class="input" type="password" placeholder="supersecretpassword" name="confirmPassword" @change="checkPasswordMatch" v-model="confirmPassword" required>
+                      <input class="input" type="password" placeholder="supersecretpassword" name="confirmPassword" v-on:input="checkPasswordMatch" v-model="user.confirmPassword" required>
                       <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
                       </span>
@@ -105,29 +105,21 @@
           password: '',
           confirmPassword: ''
         },
-        password: '',
-        confirmPassword: '',
         passwordsMatch: false,
         errors: {}
       }
     },
     watch: {},
-    computed: {
-      confirmPassword() {
-        return _.debounce(function () {
-
-        })
-      }
-    },
+    computed: {},
     methods: {
-      // Clean up method to alert as typing...
-      // use watcher or computed instead of method check
-      checkPasswordMatch() {
-        if (this.user.password && this.user.confirmPassword) {
-          console.log('passwords have btoh been filled out');
-          (this.user.password !== this.user.confirmPassword) ? this.passwordsMatch = true : this.passwordsMatch = false
-        }
-       }
+      checkPasswordMatch: _.debounce(function () {
+        console.log("password updated")
+        // CHECK BOTH PASSWORD VALUES
+        // DISPLAY ERROR IF != MATCH
+        }, 1000),
+      anotherFunction() {
+        // do something here
+      }
       // implement post and bcrypt methods here
     }
   }
