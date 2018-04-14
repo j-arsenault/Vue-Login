@@ -149,13 +149,13 @@
       }, 1000),
       encryptPassword() {
 
-        let salt = bcrypt.genSaltSync(10);
+        let salt = bcrypt.genSaltSync(10)
         this.pwd = this.user.password
 
         if (this.user.password=== this.user.confirmPassword) {
           bcrypt.hash(this.pwd, salt, function(err, hash) {
             if (hash) {
-              console.log('ecnrypted password ==- ' + hash)
+              console.log('ecnrypted password == ' + hash)
               hashish = hash
             }
           })
@@ -163,7 +163,7 @@
       },
       decryptPassword() {
         bcrypt.compare(this.user.password, '$2a$10$WhIh0rzHxhghZhJOB6HKIOxGhQs3hQJb9ltTvrWZEbdAVvZZpTzUe', function(err, res) {
-          console.log('password was .....')
+          console.log('password matches?')
           console.log(res)
         })
       }
