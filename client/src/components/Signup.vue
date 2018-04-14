@@ -98,10 +98,10 @@
 
                 <div class="field is-grouped">
                   <div class="control">
-                    <button class="button is-link">Submit</button>
+                    <button class="button is-link"  v-on:click="encryptPassword">Submit</button>
                   </div>
                   <div class="control">
-                    <button class="button is-text">Cancel</button>
+                    <button class="button is-text" v-on:click="decryptPassword">DECRYPT</button>
                   </div>
                 </div>
               </div>
@@ -116,7 +116,8 @@
 
 
 <script>
-  import _ from 'lodash';
+  import _ from 'lodash'
+  import bcrypt from 'bcryptjs'
 
   export default {
     name: 'Signup',
@@ -130,6 +131,7 @@
           confirmPassword: ''
         },
         passwordsMatch: false,
+        pwd: '',
         errors: {}
       }
     },
@@ -144,8 +146,27 @@
        (this.user.password !== this.user.confirmPassword)
           ? this.passwordsMatch = true
           : this.passwordsMatch = false
-      }, 1000)
-      // implement post and bcrypt methods here
+      }, 1000),
+      encryptPassword() {
+
+        let salt = bcrypt.genSaltSync(10);
+        this.pwd = this.user.password
+
+        if (this.user.password=== this.user.confirmPassword) {
+          bcrypt.hash(this.pwd, salt, function(err, hash) {
+            if (hash) {
+              console.log('ecnrypted password ==- ' + hash)
+              hashish = hash
+            }
+          })
+        }
+      },
+      decryptPassword() {
+        bcrypt.compare(this.user.password, '$2a$10$WhIh0rzHxhghZhJOB6HKIOxGhQs3hQJb9ltTvrWZEbdAVvZZpTzUe', function(err, res) {
+          console.log('password was .....')
+          console.log(res)
+        })
+      }
     }
   }
 </script>
