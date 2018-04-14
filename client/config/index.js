@@ -47,7 +47,11 @@ module.exports = {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 
-    // Paths
+    // Paths    bcrypt.genSalt(10, function(err, salt) {
+//            bcrypt.hash(this.user.password, salt, function(err, hash) {
+//              console.log(hash)
+//            })
+//          })
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
