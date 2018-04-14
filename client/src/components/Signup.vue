@@ -142,7 +142,7 @@
         return this.passwordsMatch ? 'is-danger' : ''
       },
       passwordsEmpty() {
-        return (this.user.password === '' && this.user.confirmPassword === '')
+        return (!this.user.password && !this.user.confirmPassword)
           ? this.passwordsMatch = false : false
       }
     },
