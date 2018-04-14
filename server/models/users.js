@@ -3,15 +3,20 @@ const dbfactory = require('./database.js')
 const schema = {
   firstName: {
     type: String,
-    required: [true, 'First name is required']
+    required: [true, 'First name is required'],
+    minlength: [2, 'Your first name is too short'],
+    maxlength: [50, 'Your first name is too long']
   },
   lastName: {
     type: String,
-    required: [true, 'Last name is required']
+    required: [true, 'Last name is required'],
+    minlength: [3, 'Your last name is too short'],
+    maxlength: [100, 'Your last name is too long']
   },
   password: {
     type: String,
-    required: [true, 'Password is required']
+    required: [true, 'Password is required'],
+    minlength: [8, 'Your password must be 8 characters']
   },
   active: {
     type: Boolean
