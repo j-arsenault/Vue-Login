@@ -1,3 +1,4 @@
+import { isEmail } from 'validator'
 const dbfactory = require('./database.js')
 
 const schema = {
@@ -12,6 +13,11 @@ const schema = {
     required: [true, 'Last name is required'],
     minlength: [3, 'Your last name is too short'],
     maxlength: [100, 'Your last name is too long']
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    validate: [ isEmail, 'Invalid email' ]
   },
   password: {
     type: String,
