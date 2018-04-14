@@ -63,6 +63,7 @@
                            type="password"
                            placeholder="supersecretpassword"
                            name="password"
+                           v-on:input="checkPasswordMatch"
                            v-model="user.password"
                            v-bind:class="passwordNoMatch"
                            required>
@@ -73,7 +74,7 @@
                   <p class="help is-danger" v-if="errors.password">{{ errors.password.message }}</p>
                 </div>
 
-                <div class="field" v-if="passwordsMatch">
+                <div class="field animated flipInX" v-if="passwordsMatch || passwordsEmpty">
                   <span class="tag is-danger">Passwords Do Not Match!</span>
                 </div>
 
@@ -139,13 +140,21 @@
     computed: {
       passwordNoMatch() {
         return this.passwordsMatch ? 'is-danger' : ''
+      },
+      passwordsEmpty() {
+        return (this.user.password === '' && this.user.confirmPassword === '')
+          ? this.passwordsMatch = false : false
       }
     },
     methods: {
       checkPasswordMatch: _.debounce(function () {
-       (this.user.password !== this.user.confirmPassword)
-          ? this.passwordsMatch = true
-          : this.passwordsMatch = false
+        if (this.user.password && this.user.confirmPassword) {
+          (this.user.password !== this.user.confirmPassword)
+            ? this.passwordsMatch = true
+            : this.passwordsMatch = false
+        } else {
+          this.passwordsMatch = false
+        }
       }, 1000),
       encryptPassword() {
 
@@ -156,7 +165,6 @@
           bcrypt.hash(this.pwd, salt, function(err, hash) {
             if (hash) {
               console.log('ecnrypted password == ' + hash)
-              hashish = hash
             }
           })
         }
