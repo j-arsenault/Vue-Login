@@ -1,5 +1,7 @@
-import { isEmail } from 'validator'
 const dbfactory = require('./database.js')
+const validator = require('validator')
+const bcrypt = require('bcryptjs')
+const moment = require('moment')
 
 const schema = {
   firstName: {
@@ -17,7 +19,7 @@ const schema = {
   email: {
     type: String,
     required: [true, 'Email is required'],
-    validate: [ isEmail, 'Invalid email' ]
+    validate: [validator.isEmail, 'Invalid email']
   },
   password: {
     type: String,
@@ -26,17 +28,21 @@ const schema = {
   },
   active: {
     type: Boolean
+  },
+  dateCreated: {
+    type: Date
   }
 }
 
 const Users = dbfactory("Users", schema)
 
-function addUser(firstName, lastName, password, active) {
+function addUser(firstName, lastName, password) {
   let new_user = new Users({
     firstName: firstName,
     lastName: lastName,
-    password: password,
-    active: active
+    password: generateHash(),
+    active: true,
+    dateCreated: moment().format()
   })
   return new Promise((resolve, reject) => {
     new_user.save(function (error, user) {
@@ -98,6 +104,14 @@ function removeOne(id) {
   })
 }
 
+function generateHash(email) {
+  let salt = bcrypt.genSaltSync(10)
+  return  bcrypt.hashSync(email, salt);
+}
+
+function compareHash(email) {
+  return bcrypt.compare(email, hashedPassword)
+}
 
 module.exports = {
   addUser,

@@ -119,6 +119,7 @@
 <script>
   import _ from 'lodash'
   import bcrypt from 'bcryptjs'
+  import UserService from '@/services/UserService'
 
   export default {
     name: 'Signup',
@@ -156,25 +157,34 @@
           this.passwordsMatch = false
         }
       }, 1000),
-      encryptPassword() {
-
-        let salt = bcrypt.genSaltSync(10)
-        this.pwd = this.user.password
-
-        if (this.user.password=== this.user.confirmPassword) {
-          bcrypt.hash(this.pwd, salt, function(err, hash) {
-            if (hash) {
-              console.log('ecnrypted password == ' + hash)
-            }
-          })
-        }
-      },
-      decryptPassword() {
-        bcrypt.compare(this.user.password, '$2a$10$WhIh0rzHxhghZhJOB6HKIOxGhQs3hQJb9ltTvrWZEbdAVvZZpTzUe', function(err, res) {
-          console.log('password matches?')
-          console.log(res)
+      async addUser() {
+        await UserService.addUser(this.user).then(res => {
+          if (res.data.errors) {
+            this.errors = res.data.errors
+            this.errorMsg('Please fill out all form fields')
+          } else {
+            this.userSaved()
+            this.$router.push({name: 'Login'})
+          }
         })
-      }
+      },
+//      encryptPassword() {
+//        if (this.user.password === this.user.confirmPassword) {
+//          console.log(this.generateHash(this.user.password))
+//          console.log('does it match stored password.....')
+//          console.log(this.decryptPassword(this.user.password))
+//        }
+//      },
+//      decryptPassword() {
+//        bcrypt.compare(this.user.password, '$2a$10$m3XHNeLxFiDFOwUIF2liHeZesh3uhqQIqaJKPBlvtKvt6xjpMp/5W', function(err, res) {
+//          console.log('password matches?')
+//          console.log(res)
+//        })
+//      },
+//      generateHash(email) {
+//        let salt = bcrypt.genSaltSync(10)
+//        return  bcrypt.hashSync(email, salt);
+//      }
     }
   }
 </script>
