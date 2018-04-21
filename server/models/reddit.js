@@ -32,7 +32,7 @@ function addreddit(reddit_id, TCHuser_id, username, access_token, is_linked) {
     is_linked:          is_linked
   })
   return new Promise((resolve, reject) => {
-    new_reddit.save(function (error, account) {
+    new_reddit.save(function (error, reddit) {
       if (error) {
         reject(error)
       }
@@ -47,7 +47,7 @@ function addreddit(reddit_id, TCHuser_id, username, access_token, is_linked) {
 
 function fetchOne(id) {
   return new Promise((resolve, reject) => {
-    Reddit.findById(id, Object.keys(schema).join(" "), function (error, account) {
+    Reddit.findById(id, Object.keys(schema).join(" "), function (error, reddit) {
       if (error) {
         reject(error)
       }
@@ -58,12 +58,12 @@ function fetchOne(id) {
 
 function updateOne(id, redditObj) {
   return new Promise((resolve, reject) => {
-    Reddit.findById(id, Object.keys(schema).join(" "), function (error, account){
+    Reddit.findById(id, Object.keys(schema).join(" "), function (error, reddit){
       if (error){
         reject(error)
       }
-      reddit.reddit_id          = redditObj.reddit_id
-      reddit.reddit_user_id     = redditObj.reddit_user_id
+      reddit.reddit_id           = redditObj.reddit_id
+      reddit.reddit_user_id      = redditObj.reddit_user_id
       reddit.username            = redditObj.username
       reddit.access_token        = redditObj.access_token
       reddit.is_linked           = redditObj.is_linked
@@ -82,7 +82,7 @@ function removeOne(id) {
   return new Promise((resolve, reject) => {
     Reddit.remove({
       _id: id
-    }, function (error, account) {
+    }, function (error, reddit) {
       if (error) {
         reject(error)
       }

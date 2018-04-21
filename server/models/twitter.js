@@ -32,7 +32,7 @@ function addtwitter(twitter_id, TCHuser_id, username, access_token, is_linked) {
     is_linked:          is_linked
   })
   return new Promise((resolve, reject) => {
-    new_twitter.save(function (error, account) {
+    new_twitter.save(function (error, twitter) {
       if (error) {
         reject(error)
       }
@@ -47,7 +47,7 @@ function addtwitter(twitter_id, TCHuser_id, username, access_token, is_linked) {
 
 function fetchOne(id) {
   return new Promise((resolve, reject) => {
-    Twitter.findById(id, Object.keys(schema).join(" "), function (error, account) {
+    Twitter.findById(id, Object.keys(schema).join(" "), function (error, twitter) {
       if (error) {
         reject(error)
       }
@@ -58,7 +58,7 @@ function fetchOne(id) {
 
 function updateOne(id, twitterObj) {
   return new Promise((resolve, reject) => {
-    Twitter.findById(id, Object.keys(schema).join(" "), function (error, account){
+    Twitter.findById(id, Object.keys(schema).join(" "), function (error, twitter){
       if (error){
         reject(error)
       }
@@ -82,7 +82,7 @@ function removeOne(id) {
   return new Promise((resolve, reject) => {
     Twitter.remove({
       _id: id
-    }, function (error, account) {
+    }, function (error, twitter) {
       if (error) {
         reject(error)
       }

@@ -32,7 +32,7 @@ function addTwitch(twitch_id, TCHuser_id, username, access_token, is_linked) {
     is_linked:      is_linked
   })
   return new Promise((resolve, reject) => {
-    new_twitch.save(function (error, account) {
+    new_twitch.save(function (error, twitch) {
       if (error) {
         reject(error)
       }
@@ -47,7 +47,7 @@ function addTwitch(twitch_id, TCHuser_id, username, access_token, is_linked) {
 
 function fetchOne(id) {
   return new Promise((resolve, reject) => {
-    Twitch.findById(id, Object.keys(schema).join(" "), function (error, account) {
+    Twitch.findById(id, Object.keys(schema).join(" "), function (error, twitch) {
       if (error) {
         reject(error)
       }
@@ -58,7 +58,7 @@ function fetchOne(id) {
 
 function updateOne(id, twitchObj) {
   return new Promise((resolve, reject) => {
-    Twitch.findById(id, Object.keys(schema).join(" "), function (error, account){
+    Twitch.findById(id, Object.keys(schema).join(" "), function (error, twitch){
       if (error){
         reject(error)
       }
@@ -82,7 +82,7 @@ function removeOne(id) {
   return new Promise((resolve, reject) => {
     Twitch.remove({
       _id: id
-    }, function (error, account) {
+    }, function (error, twitch) {
       if (error) {
         reject(error)
       }
