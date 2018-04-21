@@ -44,7 +44,7 @@ $ npm run dev:pc
 ```
 
 
-Once running you can test server by going to `http://localhost:8081/users`
+Once running you can test server by going to `http://localhost:8081/api/users`
 
 You sould see the following
 
