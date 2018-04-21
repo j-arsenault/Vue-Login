@@ -99,10 +99,12 @@
 
                 <div class="field is-grouped">
                   <div class="control">
-                    <button class="button is-link"  v-on:click="encryptPassword">Submit</button>
+                    <button class="button is-link"  v-on:click="addUser">Save</button>
                   </div>
                   <div class="control">
-                    <button class="button is-text" v-on:click="decryptPassword">DECRYPT</button>
+                    <router-link v-bind:to="{ name: 'Landing' }" class="button" active-class="" exact>
+                      <span>Cancel</span>
+                    </router-link>
                   </div>
                 </div>
               </div>
@@ -167,24 +169,7 @@
             this.$router.push({name: 'Login'})
           }
         })
-      },
-//      encryptPassword() {
-//        if (this.user.password === this.user.confirmPassword) {
-//          console.log(this.generateHash(this.user.password))
-//          console.log('does it match stored password.....')
-//          console.log(this.decryptPassword(this.user.password))
-//        }
-//      },
-//      decryptPassword() {
-//        bcrypt.compare(this.user.password, '$2a$10$m3XHNeLxFiDFOwUIF2liHeZesh3uhqQIqaJKPBlvtKvt6xjpMp/5W', function(err, res) {
-//          console.log('password matches?')
-//          console.log(res)
-//        })
-//      },
-//      generateHash(email) {
-//        let salt = bcrypt.genSaltSync(10)
-//        return  bcrypt.hashSync(email, salt);
-//      }
+      }
     }
   }
 </script>
