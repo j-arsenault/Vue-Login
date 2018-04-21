@@ -2,6 +2,7 @@ const dbfactory = require('./database.js')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
+const UIDGenerator = require('uid-generator');
 
 const schema = {
   firstName: {
@@ -31,6 +32,9 @@ const schema = {
     required: [true, 'Password is required'],
     minlength: [8, 'Your password must be at least 8 characters']
   },
+  emailConfirmationToken: {
+    type: String,
+  },
   active: {
     type: Boolean
   },
@@ -42,14 +46,16 @@ const schema = {
 const Users = dbfactory("Users", schema)
 
 function addUser(firstName, lastName, email, password, confirmPassword) {
+  const uidgen = new UIDGenerator()
   let new_user = new Users({
     firstName: firstName,
     lastName: lastName,
     email: email,
     password: password,
     confirmPassword: confirmPassword,
+    emailConfirmationToken: uidgen.generateSync(UIDGenerator.BASE16),
     active: true,
-    dateCreated: new Date()
+    dateCreated: moment().format()
   })
   return new Promise((resolve, reject) => {
     new_user.save(function (error, user) {
