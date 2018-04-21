@@ -48,4 +48,4 @@ Once running you can test server by going to `http://localhost:8081/api/users`
 
 You sould see the following
 
-![Image](https://i.imgur.com/XUXJSkT.png)
+![Image](https://i.imgur.com/Qo6KxyX.png)
