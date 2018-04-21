@@ -4,7 +4,7 @@ let path = '/api';
 module.exports = (app) => {
   // Add new user
   app.post(`${path}/users`, (req, res) => {
-    Users.addUser(req.body.firstName, req.body.firstName, req.body.password).then(
+    Users.addUser(req.body.firstName, req.body.firstName, req.body.email, req.body.password).then(
       (message) => {
         res.send(message)
       },
@@ -14,6 +14,18 @@ module.exports = (app) => {
     ).catch(function (error) {
       return error
     })
+  })
+
+
+  // Fetch single user for testing
+  app.get(`${path}/users`, (req, res) => {
+    res.send(
+      [{
+        firstName: "Ian",
+        lastName: "Arsenault",
+        dateCreated: new Date()
+      }]
+    )
   })
 
   // Fetch single user

@@ -36,13 +36,14 @@ const schema = {
 
 const Users = dbfactory("Users", schema)
 
-function addUser(firstName, lastName, password) {
+function addUser(firstName, lastName, email, password) {
   let new_user = new Users({
     firstName: firstName,
     lastName: lastName,
-    password: generateHash(),
+    email: email,
+    password: password,
     active: true,
-    dateCreated: moment().format()
+    dateCreated: new Date()
   })
   return new Promise((resolve, reject) => {
     new_user.save(function (error, user) {
@@ -50,7 +51,6 @@ function addUser(firstName, lastName, password) {
         reject(error)
       }
       resolve({
-        user: user,
         success: true,
         message: 'You\'ve successfully signed up!'
       })
