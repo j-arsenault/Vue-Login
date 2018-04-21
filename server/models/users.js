@@ -24,7 +24,12 @@ const schema = {
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [8, 'Your password must be 8 characters']
+    minlength: [8, 'Your password must be at least 8 characters']
+  },
+  confirmPassword: {
+    type: String,
+    required: [true, 'Password is required'],
+    minlength: [8, 'Your password must be at least 8 characters']
   },
   active: {
     type: Boolean
@@ -36,12 +41,13 @@ const schema = {
 
 const Users = dbfactory("Users", schema)
 
-function addUser(firstName, lastName, email, password) {
+function addUser(firstName, lastName, email, password, confirmPassword) {
   let new_user = new Users({
     firstName: firstName,
     lastName: lastName,
     email: email,
     password: password,
+    confirmPassword: confirmPassword,
     active: true,
     dateCreated: new Date()
   })
@@ -50,7 +56,9 @@ function addUser(firstName, lastName, email, password) {
       if (error) {
         reject(error)
       }
+      // remove user: user, once done testing
       resolve({
+        user: user,
         success: true,
         message: 'You\'ve successfully signed up!'
       })

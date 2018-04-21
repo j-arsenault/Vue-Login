@@ -19,6 +19,7 @@
                            placeholder="Bubbles"
                            name="firstName"
                            v-model="user.firstName"
+                           v-bind:class="{ 'is-danger': errors.firstName }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
@@ -34,6 +35,7 @@
                            placeholder="Bubblerino"
                            name="lastName"
                            v-model="user.lastName"
+                           v-bind:class="{ 'is-danger': errors.lastName }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
@@ -49,6 +51,7 @@
                            placeholder="joey@google.com"
                            name="email"
                            v-model="user.email"
+                           v-bind:class="{ 'is-danger': errors.email }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-envelope"></i>
@@ -59,13 +62,14 @@
                 <div class="field">
                   <label class="label">Password</label>
                   <div class="control has-icons-left has-icons-right">
+                    <!-- front end password error class binding v-bind:class="passwordNoMatch" -->
                     <input class="input"
                            type="password"
                            placeholder="supersecretpassword"
                            name="password"
                            v-on:input="checkPasswordMatch"
                            v-model="user.password"
-                           v-bind:class="passwordNoMatch"
+                           v-bind:class="{'is-danger': errors.password }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
@@ -87,7 +91,7 @@
                            name="confirmPassword"
                            v-on:input="checkPasswordMatch"
                            v-model="user.confirmPassword"
-                           v-bind:class="passwordNoMatch"
+                           v-bind:class="{'is-danger': errors.confirmPassword }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
@@ -136,7 +140,8 @@
         },
         passwordsMatch: false,
         pwd: '',
-        errors: {}
+        errors: {},
+        hasErrors: true
       }
     },
     watch: {},
@@ -163,9 +168,10 @@
         await UserService.addUser(this.user).then(res => {
           if (res.data.errors) {
             this.errors = res.data.errors
-            this.errorMsg('Please fill out all form fields')
+            this.hasErrors = true
+//            this.errorMsg('Please fill out all form fields')
           } else {
-            this.userSaved()
+//            this.userSaved()
             this.$router.push({name: 'Login'})
           }
         })
