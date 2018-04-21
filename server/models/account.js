@@ -1,19 +1,5 @@
 const dbfactory = require('./database.js');
 
-//use this for auto incrementing the account_id
-//TODO: move this to another file and call when inserting new accounts
-db.createCollection("counters");
-db.counter.insert({_id:"tid",sequence_value:0});
-
-function getNextSequenceValue(sequenceName){
-    var sequenceDocument = db.counters.findAndModify({
-    query:{_id: sequenceName },
-    update: {$inc:{sequence_value:1}},
-    new:true
-      });
-  return sequenceDocument.sequence_value;
-};
-
 const schema = {
   account_id: {
     type: Number,
