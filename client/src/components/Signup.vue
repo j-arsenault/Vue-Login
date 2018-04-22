@@ -19,6 +19,7 @@
                            placeholder="Bubbles"
                            name="firstName"
                            v-model="user.firstName"
+                           v-on:input="checkFormFields"
                            v-bind:class="{ 'is-danger': errors.firstName, 'is-danger': error.firstName }"
                            required>
                     <span class="icon is-small is-left">
@@ -36,6 +37,7 @@
                            placeholder="Bubblerino"
                            name="lastName"
                            v-model="user.lastName"
+                           v-on:input="checkFormFields"
                            v-bind:class="{ 'is-danger': errors.lastName, 'is-danger': error.lastName }"
                            required>
                     <span class="icon is-small is-left">
@@ -53,6 +55,7 @@
                            placeholder="joey@google.com"
                            name="email"
                            v-model="user.email"
+                           v-on:input="checkFormFields"
                            v-bind:class="{ 'is-danger': errors.email, 'is-danger': error.email}"
                            required>
                     <span class="icon is-small is-left">
@@ -165,6 +168,17 @@
       }
     },
     methods: {
+      checkFormFields:  _.debounce(function () {
+        if (this.user.firstName) {
+          this.error.firstName = ''
+        }
+        if (this.user.lastName) {
+          this.error.lastName = ''
+        }
+        if (this.user.email) {
+          this.error.email = ''
+        }
+      }, 500),
       checkPasswordMatch: _.debounce(function () {
         if (this.user.password && this.user.confirmPassword) {
           if (this.user.password !== this.user.confirmPassword) {
@@ -176,20 +190,11 @@
             this.error.password = ''
             this.error.confirmPassword = ''
           }
-
-//          (this.user.password !== this.user.confirmPassword)
-//            ? this.passwordsMatch = true
-//            : this.passwordsMatch = false
         } else {
           this.passwordsMatch = false
         }
 
       }, 500),
-      updateInput($event) {
-        if( !$event.target.classList.contains('is-danger') ) {
-          $event.target.classList.toggle('is-danger')
-        }
-      },
       validateForm() {
         if (!this.user.firstName) {
           this.error.firstName = 'First name is required'
@@ -222,29 +227,6 @@
           this.error.confirmPassword = ''
         }
 
-        if (this.user.password && this.user.confirmPassword) {
-          console.log('passwords both have length')
-          if (this.user.password !== this.user.confirmPassword) {
-            console.log('passwords DO NOT MATCH')
-            this.errors.nomatch = 'Passwords Must Match!'
-          }
-        }
-//        if (this.user.password && this.user.confirmPassword) {
-//          console.log('passwords both have length')
-//          if (this.user.password !== this.user.confirmPassword) {
-//            console.log('passwords DO NOT MATCH')
-//          }
-//        }
-//        if (!this.user.password && !this.user.confirmPassword) {
-//          console.log('passwords are empty')
-//        }
-//        if (this.user.password && this.user.confirmPassword) {
-//          (this.user.password !== this.user.confirmPassword)
-//            ? this.passwordsMatch = true
-//            : this.passwordsMatch = false
-//        } else {
-//          this.passwordsMatch = false
-//        }
       },
       async addUser() {
         await UserService.addUser(this.user).then(res => {
