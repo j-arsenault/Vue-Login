@@ -177,9 +177,13 @@
         }
         if (this.user.email) {
           this.error.email = ''
+          this.errors.email.message = ''
         }
       }, 500),
       checkPasswordMatch: _.debounce(function () {
+        if (this.user.password) {
+          this.errors.password = ''
+        }
         if (this.user.password && this.user.confirmPassword) {
           if (this.user.password !== this.user.confirmPassword) {
             this.passwordsMatch = true
@@ -225,6 +229,9 @@
           this.error.confirmPassword = 'Password is required'
         } else {
           this.error.confirmPassword = ''
+        }
+        if (!this.error.firstName && !this.error.lastName && !this.error.email && !this.error.password && !this.error.confirmPassword) {
+          this.addUser()
         }
 
       },
