@@ -25,37 +25,51 @@ const schema = {
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [8, 'Your password must be at least 8 characters']
-  },
-  confirmPassword: {
-    type: String,
-    required: [true, 'Password is required'],
-    minlength: [8, 'Your password must be at least 8 characters']
+    minlength: [8, 'Your password must be at least 8 characters'],
   },
   emailConfirmationToken: {
     type: String,
   },
   active: {
-    type: Boolean
+    type: Boolean,
+    default: true
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+    required: true
   },
   dateCreated: {
-    type: Date
+    type: Date,
+    default: moment().format()
   }
 }
 
 const Users = dbfactory("Users", schema)
 
-function addUser(firstName, lastName, email, password, confirmPassword) {
-  const uidgen = new UIDGenerator()
+Users.schema.pre('save', function(next) {
+  let user = this;
+  if (!user.isModified('password')) return next();
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(user.password, salt, function(err, hash) {
+      user.password = hash;
+      next();
+    });
+  });
+});
+
+function addUser(firstName, lastName, email, password) {
+  const uidgen = new UIDGenerator(512, UIDGenerator.BASE62)
   let new_user = new Users({
     firstName: firstName,
     lastName: lastName,
     email: email,
     password: password,
-    confirmPassword: confirmPassword,
     emailConfirmationToken: uidgen.generateSync(UIDGenerator.BASE16),
-    active: true,
-    dateCreated: moment().format()
+    active: this.active,
+    role: this.role,
+    dateCreated: this.dateCreated
   })
   return new Promise((resolve, reject) => {
     new_user.save(function (error, user) {
@@ -118,9 +132,9 @@ function removeOne(id) {
   })
 }
 
-function generateHash(email) {
+function generateHash(password) {
   let salt = bcrypt.genSaltSync(10)
-  return  bcrypt.hashSync(email, salt);
+  return  bcrypt.hashSync(password, salt)
 }
 
 function compareHash(email) {

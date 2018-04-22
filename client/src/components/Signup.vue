@@ -103,7 +103,7 @@
 
                 <div class="field is-grouped">
                   <div class="control">
-                    <button class="button is-link"  v-on:click="addUser">Save</button>
+                    <button class="button is-link" v-on:click="validateForm()">Save</button>
                   </div>
                   <div class="control">
                     <router-link v-bind:to="{ name: 'Landing' }" class="button" active-class="" exact>
@@ -163,7 +163,61 @@
         } else {
           this.passwordsMatch = false
         }
-      }, 1000),
+      }, 500),
+      updateInput($event) {
+        if( !$event.target.classList.contains('is-danger') ) {
+          $event.target.classList.toggle('is-danger')
+        }
+      },
+      validateForm() {
+        // Validate front-end first
+
+        if (!this.user.firstName
+          && !this.user.lastName
+          && !this.user.email
+          && !this.user.password
+          && !this.user.confirmPassword) {
+          console.log('ALL FIELDS ARE EMPTY')
+        }
+        if (!this.user.firstName) {
+          console.log('First Name is empty')
+
+          let firstNameError = { message: "First name is required"};
+
+          this.$set(this.errors, firstNameError)
+          console.log(this.errors)
+        }
+        if (!this.user.lastName) {
+          console.log('Last Name is empty')
+        }
+        if (!this.user.email) {
+          console.log('Email is empty')
+        }
+        if (!this.user.password) {
+          console.log('Password is empty')
+        }
+        if (!this.user.confirmPassword) {
+          console.log('Confirm Password is empty')
+        }
+
+
+//        if (this.user.password && this.user.confirmPassword) {
+//          console.log('passwords both have length')
+//          if (this.user.password !== this.user.confirmPassword) {
+//            console.log('passwords DO NOT MATCH')
+//          }
+//        }
+//        if (!this.user.password && !this.user.confirmPassword) {
+//          console.log('passwords are empty')
+//        }
+//        if (this.user.password && this.user.confirmPassword) {
+//          (this.user.password !== this.user.confirmPassword)
+//            ? this.passwordsMatch = true
+//            : this.passwordsMatch = false
+//        } else {
+//          this.passwordsMatch = false
+//        }
+      },
       async addUser() {
         await UserService.addUser(this.user).then(res => {
           if (res.data.errors) {
