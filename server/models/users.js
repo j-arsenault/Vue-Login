@@ -1,37 +1,82 @@
 const dbfactory = require('./database.js')
+const validator = require('validator')
+const bcrypt = require('bcryptjs')
+const moment = require('moment')
+const UIDGenerator = require('uid-generator');
 
 const schema = {
   firstName: {
     type: String,
-    required: [true, 'First name is required']
+    required: [true, 'First name is required'],
+    minlength: [2, 'Your first name is too short'],
+    maxlength: [50, 'Your first name is too long']
   },
   lastName: {
     type: String,
-    required: [true, 'Last name is required']
+    required: [true, 'Last name is required'],
+    minlength: [3, 'Your last name is too short'],
+    maxlength: [100, 'Your last name is too long']
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    validate: [validator.isEmail, 'Invalid email']
   },
   password: {
     type: String,
-    required: [true, 'Password is required']
+    required: [true, 'Password is required'],
+    minlength: [8, 'Your password must be at least 8 characters'],
+  },
+  emailConfirmationToken: {
+    type: String,
   },
   active: {
-    type: Boolean
+    type: Boolean,
+    default: true
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+    required: true
+  },
+  dateCreated: {
+    type: Date,
+    default: moment().format()
   }
 }
 
 const Users = dbfactory("Users", schema)
 
-function addUser(firstName, lastName, password, active) {
+Users.schema.pre('save', function(next) {
+  let user = this;
+  if (!user.isModified('password')) return next();
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(user.password, salt, function(err, hash) {
+      user.password = hash;
+      next();
+    });
+  });
+});
+
+function addUser(firstName, lastName, email, password) {
+  const uidgen = new UIDGenerator(512, UIDGenerator.BASE62)
   let new_user = new Users({
     firstName: firstName,
     lastName: lastName,
+    email: email,
     password: password,
-    active: active
+    emailConfirmationToken: uidgen.generateSync(UIDGenerator.BASE16),
+    active: this.active,
+    role: this.role,
+    dateCreated: this.dateCreated
   })
   return new Promise((resolve, reject) => {
     new_user.save(function (error, user) {
       if (error) {
         reject(error)
       }
+      // remove user: user, once done testing
       resolve({
         user: user,
         success: true,
@@ -87,6 +132,14 @@ function removeOne(id) {
   })
 }
 
+function generateHash(password) {
+  let salt = bcrypt.genSaltSync(10)
+  return  bcrypt.hashSync(password, salt)
+}
+
+function compareHash(email) {
+  return bcrypt.compare(email, hashedPassword)
+}
 
 module.exports = {
   addUser,
