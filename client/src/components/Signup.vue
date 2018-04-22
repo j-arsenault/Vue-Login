@@ -19,7 +19,7 @@
                            placeholder="Bubbles"
                            name="firstName"
                            v-model="user.firstName"
-                           v-bind:class="{ 'is-danger': errors.firstName }"
+                           v-bind:class="{ 'is-danger': errors.firstName, 'is-danger': error.firstName }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
@@ -36,13 +36,13 @@
                            placeholder="Bubblerino"
                            name="lastName"
                            v-model="user.lastName"
-                           v-bind:class="{ 'is-danger': errors.lastName }"
+                           v-bind:class="{ 'is-danger': errors.lastName, 'is-danger': error.lastName }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
                       </span>
                   </div>
-                  <p class="help is-danger" v-if="error.lastName">{{error.lastName }}</p>
+                  <p class="help is-danger" v-if="error.lastName">{{ error.lastName }}</p>
                   <p class="help is-danger" v-if="errors.lastName">{{ errors.lastName.message }}</p>
                 </div>
                 <div class="field">
@@ -53,13 +53,13 @@
                            placeholder="joey@google.com"
                            name="email"
                            v-model="user.email"
-                           v-bind:class="{ 'is-danger': errors.email }"
+                           v-bind:class="{ 'is-danger': errors.email, 'is-danger': error.email}"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-envelope"></i>
                       </span>
                   </div>
-                  <p class="help is-danger" v-if="error.email">{{error.email }}</p>
+                  <p class="help is-danger" v-if="error.email">{{ error.email }}</p>
                   <p class="help is-danger" v-if="errors.email">{{ errors.email.message }}</p>
                 </div>
                 <div class="field">
@@ -72,13 +72,13 @@
                            name="password"
                            v-on:input="checkPasswordMatch"
                            v-model="user.password"
-                           v-bind:class="{'is-danger': errors.password }"
+                           v-bind:class="{'is-danger': errors.password, 'is-danger': error.password }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
                       </span>
                   </div>
-                  <p class="help is-danger" v-if="error.password">{{error.password }}</p>
+                  <p class="help is-danger" v-if="error.password">{{ error.password }}</p>
                   <p class="help is-danger" v-if="errors.password">{{ errors.password.message }}</p>
                 </div>
 
@@ -95,7 +95,7 @@
                            name="confirmPassword"
                            v-on:input="checkPasswordMatch"
                            v-model="user.confirmPassword"
-                           v-bind:class="{'is-danger': errors.confirmPassword }"
+                           v-bind:class="{'is-danger': errors.confirmPassword, 'is-danger': error.confirmPassword }"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
@@ -167,12 +167,23 @@
     methods: {
       checkPasswordMatch: _.debounce(function () {
         if (this.user.password && this.user.confirmPassword) {
-          (this.user.password !== this.user.confirmPassword)
-            ? this.passwordsMatch = true
-            : this.passwordsMatch = false
+          if (this.user.password !== this.user.confirmPassword) {
+            this.passwordsMatch = true
+            this.error.password = 'Passwords do not match'
+            this.error.confirmPassword = 'Passwords do not match'
+          } else {
+            this.passwordsMatch = false
+            this.error.password = ''
+            this.error.confirmPassword = ''
+          }
+
+//          (this.user.password !== this.user.confirmPassword)
+//            ? this.passwordsMatch = true
+//            : this.passwordsMatch = false
         } else {
           this.passwordsMatch = false
         }
+
       }, 500),
       updateInput($event) {
         if( !$event.target.classList.contains('is-danger') ) {
