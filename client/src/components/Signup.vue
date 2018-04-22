@@ -25,6 +25,7 @@
                         <i class="fas fa-user"></i>
                       </span>
                   </div>
+                  <p class="help is-danger" v-if="error.firstName">{{error.firstName }}</p>
                   <p class="help is-danger" v-if="errors.firstName">{{ errors.firstName.message }}</p>
                 </div>
                 <div class="field">
@@ -41,6 +42,7 @@
                         <i class="fas fa-user"></i>
                       </span>
                   </div>
+                  <p class="help is-danger" v-if="error.lastName">{{error.lastName }}</p>
                   <p class="help is-danger" v-if="errors.lastName">{{ errors.lastName.message }}</p>
                 </div>
                 <div class="field">
@@ -57,6 +59,7 @@
                         <i class="fas fa-envelope"></i>
                       </span>
                   </div>
+                  <p class="help is-danger" v-if="error.email">{{error.email }}</p>
                   <p class="help is-danger" v-if="errors.email">{{ errors.email.message }}</p>
                 </div>
                 <div class="field">
@@ -75,10 +78,11 @@
                         <i class="fas  fa-unlock-alt"></i>
                       </span>
                   </div>
+                  <p class="help is-danger" v-if="error.password">{{error.password }}</p>
                   <p class="help is-danger" v-if="errors.password">{{ errors.password.message }}</p>
                 </div>
 
-                <div class="field animated flipInX" v-if="passwordsMatch || passwordsEmpty">
+                <div class="field animated flipInX" v-if="passwordsMatch || passwordsEmpty || error.nomatch">
                   <span class="tag is-danger">Passwords Do Not Match!</span>
                 </div>
 
@@ -97,6 +101,7 @@
                         <i class="fas  fa-unlock-alt"></i>
                       </span>
                   </div>
+                  <p class="help is-danger" v-if="error.confirmPassword">{{error.confirmPassword }}</p>
                   <p class="help is-danger" v-if="errors.confirmPassword">{{ errors.confirmPassword.message }}</p>
                 </div>
 
@@ -139,9 +144,14 @@
           confirmPassword: ''
         },
         passwordsMatch: false,
-        pwd: '',
         errors: {},
-        hasErrors: true
+        error: {
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          confirmPassword: ''
+        }
       }
     },
     watch: {},
@@ -170,37 +180,44 @@
         }
       },
       validateForm() {
-        // Validate front-end first
-
-        if (!this.user.firstName
-          && !this.user.lastName
-          && !this.user.email
-          && !this.user.password
-          && !this.user.confirmPassword) {
-          console.log('ALL FIELDS ARE EMPTY')
-        }
         if (!this.user.firstName) {
-          console.log('First Name is empty')
-
-          let firstNameError = { message: "First name is required"};
-
-          this.$set(this.errors, firstNameError)
-          console.log(this.errors)
+          this.error.firstName = 'First name is required'
+        } else {
+          this.error.firstName = '';
         }
         if (!this.user.lastName) {
-          console.log('Last Name is empty')
+          this.error.lastName = 'Last name is required'
+        } else {
+          this.error.lastName =  ''
+        }
+        if (!this.user.lastName) {
+          this.error.lastName = 'Last name is required'
+        } else {
+          this.error.lastName = ''
         }
         if (!this.user.email) {
-          console.log('Email is empty')
+          this.error.email = 'Email is required'
+        } else {
+          this.error.email = ''
         }
         if (!this.user.password) {
-          console.log('Password is empty')
+          this.error.password = 'Password is required'
+        } else {
+          this.error.password = ''
         }
         if (!this.user.confirmPassword) {
-          console.log('Confirm Password is empty')
+          this.error.confirmPassword = 'Password is required'
+        } else {
+          this.error.confirmPassword = ''
         }
 
-
+        if (this.user.password && this.user.confirmPassword) {
+          console.log('passwords both have length')
+          if (this.user.password !== this.user.confirmPassword) {
+            console.log('passwords DO NOT MATCH')
+            this.errors.nomatch = 'Passwords Must Match!'
+          }
+        }
 //        if (this.user.password && this.user.confirmPassword) {
 //          console.log('passwords both have length')
 //          if (this.user.password !== this.user.confirmPassword) {
@@ -222,7 +239,6 @@
         await UserService.addUser(this.user).then(res => {
           if (res.data.errors) {
             this.errors = res.data.errors
-            this.hasErrors = true
 //            this.errorMsg('Please fill out all form fields')
           } else {
 //            this.userSaved()
