@@ -50,13 +50,16 @@
                 <div class="field">
                   <label class="label">Email</label>
                   <div class="control has-icons-left has-icons-right">
+                    <!-- v-bind:class="{ 'is-danger': errors.email, 'is-danger': error.email}"
+                         v-bind:class="['{{errors.email || error.email}}' ? 'is-danger' : '']"
+                    -->
                     <input class="input"
                            type="email"
                            placeholder="joey@google.com"
                            name="email"
                            v-model="user.email"
                            v-on:input="checkFormFields"
-                           v-bind:class="{ 'is-danger': errors.email, 'is-danger': error.email}"
+                           v-bind:class="emailErrors"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-envelope"></i>
@@ -75,7 +78,7 @@
                            name="password"
                            v-on:input="checkPasswordMatch"
                            v-model="user.password"
-                           v-bind:class="{'is-danger': errors.password, 'is-danger': error.password }"
+                           v-bind:class="passwordErrors"
                            required>
                     <span class="icon is-small is-left">
                         <i class="fas  fa-unlock-alt"></i>
@@ -147,6 +150,7 @@
           confirmPassword: ''
         },
         passwordsMatch: false,
+        emailValidationError: false,
         errors: {},
         error: {
           firstName: '',
@@ -159,6 +163,14 @@
     },
     watch: {},
     computed: {
+      emailErrors() {
+        return (this.error.email || this.errors.email)
+          ? 'is-danger' : ''
+      },
+      passwordErrors() {
+        return (this.error.password || this.errors.password)
+          ? 'is-danger' : ''
+      },
       passwordNoMatch() {
         return this.passwordsMatch ? 'is-danger' : ''
       },
@@ -177,7 +189,7 @@
         }
         if (this.user.email) {
           this.error.email = ''
-          this.errors.email.message = ''
+          this.errors.email = ''
         }
       }, 500),
       checkPasswordMatch: _.debounce(function () {

@@ -2,7 +2,7 @@ const dbfactory = require('./database.js')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
-const UIDGenerator = require('uid-generator');
+const UIDGenerator = require('uid-generator')
 
 const schema = {
   firstName: {
@@ -86,6 +86,17 @@ function addUser(firstName, lastName, email, password) {
   })
 }
 
+function fetchByEmail(email) {
+  return new Promise((resolve, reject) => {
+    Users.findById(email, Object.keys(schema).join(" "), function (error, user) {
+      if (error) {
+        reject(error)
+      }
+      resolve(user)
+    })
+  })
+}
+
 function fetchOne(id) {
   return new Promise((resolve, reject) => {
     Users.findById(id, Object.keys(schema).join(" "), function (error, user) {
@@ -144,6 +155,7 @@ function compareHash(email) {
 module.exports = {
   addUser,
   fetchOne,
+  fetchByEmail,
   updateOne,
   removeOne
 }
