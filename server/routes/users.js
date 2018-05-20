@@ -17,7 +17,7 @@ module.exports = (app) => {
   })
 
 
-  // Fetch single user for testing
+  // Fetch single user for testing API/Server works
   app.get(`${path}/users`, (req, res) => {
     res.send(
       [{
@@ -31,6 +31,18 @@ module.exports = (app) => {
   // Fetch single user
   app.get(`${path}/users/:id`, (req, res) => {
     Users.fetchOne(req.params.id).then(
+      (player) => {
+        res.send(player)
+      },
+      (err) => {
+        console.error(err)
+      }
+    )
+  })
+
+  // Fetch single user by email
+  app.get(`${path}/users/:email`, (req, res) => {
+    Users.fetchByEmail(req.params.email).then(
       (player) => {
         res.send(player)
       },
