@@ -251,6 +251,7 @@
         await UserService.addUser(this.user).then(res => {
           if (res.data.errors) {
             this.errors = res.data.errors
+            console.log(this.errors)
 //            this.errorMsg('Please fill out all form fields')
           } else {
 //            this.userSaved()
