@@ -96,22 +96,14 @@ function addUser(firstName, lastName, email, password) {
 }
 
 function fetchByEmail(email) {
-  console.log('model users ' + email)
   return new Promise((resolve, reject) => {
-    Users.find({ email: email}).exec(function (error, user) {
+    Users.findOne({ email: email}, function (error, user) {
       if (error) {
         reject(error)
         console.log(error)
+      } else {
+        resolve(user ? user : false)
       }
-      resolve(user)
-      console.log("FOUND: " + user)
-      // if (!_.isNull(user)) {
-      //   resolve(user)
-      //   console.log("FOUND: " + user)
-      // }
-      // else {
-      //   reject("No email found");
-      // }
     })
   })
 }
