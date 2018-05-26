@@ -42,6 +42,7 @@ module.exports = (app) => {
 
   // Fetch single user by email
   app.get(`${path}/users/:email`, (req, res) => {
+    // console.log("request = " + req.params.email)
     Users.fetchByEmail(req.params.email).then(
       (player) => {
         res.send(player)

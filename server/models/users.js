@@ -3,6 +3,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const UIDGenerator = require('uid-generator')
+const _ = require('lodash')
 
 const schema = {
   firstName: {
@@ -20,7 +21,8 @@ const schema = {
   email: {
     type: String,
     required: [true, 'Email is required'],
-    validate: [validator.isEmail, 'Invalid email']
+    validate: [validator.isEmail, 'Invalid email'],
+    index: true
   },
   password: {
     type: String,
@@ -46,18 +48,19 @@ const schema = {
   }
 }
 
+
 const Users = dbfactory("Users", schema)
 
 Users.schema.pre('save', function(next) {
-  let user = this;
+  let user = this
   if (!user.isModified('password')) return next();
   bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(user.password, salt, function(err, hash) {
-      user.password = hash;
-      next();
-    });
-  });
-});
+      user.password = hash
+      next()
+    })
+  })
+})
 
 function addUser(firstName, lastName, email, password) {
   const uidgen = new UIDGenerator(512, UIDGenerator.BASE62)
@@ -87,12 +90,22 @@ function addUser(firstName, lastName, email, password) {
 }
 
 function fetchByEmail(email) {
+  console.log('model users ' + email)
   return new Promise((resolve, reject) => {
-    Users.findById(email, Object.keys(schema).join(" "), function (error, user) {
+    Users.findOne( { email: email }, function (error, user) {
       if (error) {
         reject(error)
+        console.log(error)
       }
       resolve(user)
+      console.log("FOUND: " + user)
+      // if (!_.isNull(user)) {
+      //   resolve(user)
+      //   console.log("FOUND: " + user)
+      // }
+      // else {
+      //   reject("No email found");
+      // }
     })
   })
 }
