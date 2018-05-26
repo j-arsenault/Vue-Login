@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const UIDGenerator = require('uid-generator')
 const _ = require('lodash')
+const uniqueValidator = require('mongoose-unique-validator');
+
 
 const schema = {
   firstName: {
@@ -22,7 +24,7 @@ const schema = {
     type: String,
     required: [true, 'Email is required'],
     validate: [validator.isEmail, 'Invalid email'],
-    index: true
+    index: { unique: true }
   },
   password: {
     type: String,
@@ -48,12 +50,15 @@ const schema = {
   }
 }
 
-
 const Users = dbfactory("Users", schema)
+
+// Checks for already existing unique values
+Users.schema.plugin(uniqueValidator)
+
 
 Users.schema.pre('save', function(next) {
   let user = this
-  if (!user.isModified('password')) return next();
+  if (!user.isModified('password')) return next()
   bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(user.password, salt, function(err, hash) {
       user.password = hash
@@ -61,6 +66,7 @@ Users.schema.pre('save', function(next) {
     })
   })
 })
+
 
 function addUser(firstName, lastName, email, password) {
   const uidgen = new UIDGenerator(512, UIDGenerator.BASE62)
@@ -92,7 +98,7 @@ function addUser(firstName, lastName, email, password) {
 function fetchByEmail(email) {
   console.log('model users ' + email)
   return new Promise((resolve, reject) => {
-    Users.findOne( { email: email }, function (error, user) {
+    Users.find({ email: email}).exec(function (error, user) {
       if (error) {
         reject(error)
         console.log(error)

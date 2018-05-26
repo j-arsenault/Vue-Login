@@ -119,8 +119,6 @@
         await UserService.fetchByEmail(this.user.email).then(res => {
           if (res.data.errors) {
             this.errors = res.data.errors
-            console.log('ERRORS RETURNED :::::: ')
-            console.log(this.errors)
 //            this.errorMsg('Please fill out all form fields')
           } else {
             this.validUser = true // display this somewhere to know successful credentials
