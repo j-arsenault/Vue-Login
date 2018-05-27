@@ -4,7 +4,9 @@ const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const UIDGenerator = require('uid-generator')
 const _ = require('lodash')
-const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require('mongoose-unique-validator')
+// const passport = require('passport')
+// const LocalStrategy = require('passport-local').Strategy;
 
 
 const schema = {
@@ -50,6 +52,7 @@ const schema = {
   }
 }
 
+
 const Users = dbfactory("Users", schema)
 
 // Checks for already existing unique values
@@ -66,6 +69,10 @@ Users.schema.pre('save', function(next) {
     })
   })
 })
+
+// Users.schema.methods.validPassword = function(password) {
+//   return bcrypt.compareSync(password, this.password)
+// };
 
 
 function addUser(firstName, lastName, email, password) {
@@ -95,14 +102,110 @@ function addUser(firstName, lastName, email, password) {
   })
 }
 
-function fetchByEmail(email) {
+// function fetchByEmail(email, password, done) {
+//   passport.use(new LocalStrategy(
+//     // return new Promise((resolve, reject) => {
+//     Users.findOne({email: email}, function (error, user) {
+//       if (err) {
+//         console.log(err)
+//         return done(err)
+//       }
+//       if (!user) {
+//         console.log('NO USER BY THAT EMAIL')
+//         return done(null, false, {message: 'Incorrect email'})
+//       }
+//       if (!user.validPassword(password)) {
+//         console.log('PASSWORDS DO NOT MATCH')
+//         return done(null, false, {message: 'Incorrect password.'})
+//       }
+//       return done(null, user)
+      // if (error) {
+      //   reject(error)
+      //   console.log(error)
+      // }
+      // else if (!user) {
+      //   console.log('NO USER BY THAT EMAIL')
+      //   resolve({message: 'Incorrect email!'})
+      // }
+      // else if (!user.validPassword(password)) {
+      //   console.log('PASSWORDS DO NOT MATCH')
+      //   resolve(false, {message: 'Incorrect password.'})
+      // }
+      // else {
+      //   console.log('FOUND USER')
+      //   resolve(user)
+      // }
+
+    // })
+  // })
+// ))
+// }
+
+  // function fetchByEmail(user, done) {
+  //   Users.findOne({email: user.email}, function (err, user) {
+  //     if (err) {
+  //       return done(err);
+  //     }
+  //     if (!user) {
+  //       return done(null, false, {message: 'Incorrect email'});
+  //     }
+  //     if (!user.validPassword(user.password)) {
+  //       return done(null, false, {message: 'Incorrect password.'});
+  //     }
+  //     return done(null, user);
+  //   });
+  // }
+
+  // function fetchByEmail(user) {
+  //   return new Promise((resolve, reject) => {
+  //     Users.findOne({ email: user.email}, function (error, user) {
+  //       if (error) {
+  //         reject(error)
+  //         console.log(error)
+  //       } else {
+  //         resolve(user ? user : false)
+  //       }
+  //     })
+  //   })
+  // }
+
+  // function(username, password, done) {
+  //   User.findOne({ username: username }, function(err, user) {
+  //     if (err) { return done(err); }
+  //     if (!user) {
+  //       return done(null, false, { message: 'Incorrect username.' });
+  //     }
+  //     if (!user.validPassword(password)) {
+  //       return done(null, false, { message: 'Incorrect password.' });
+  //     }
+  //     return done(null, user);
+  //   });
+  // }
+// ));
+
+
+function fetchByEmail(request) {
+  console.log('Email = ' + request.email)
+  console.log('Password = ' + request.password)
   return new Promise((resolve, reject) => {
-    Users.findOne({ email: email}, function (error, user) {
+    Users.findOne({ email: request.email}, function (error, user) {
       if (error) {
         reject(error)
         console.log(error)
+      } else if (!user) {
+        reject('Email does not exist!')
       } else {
-        resolve(user ? user : false)
+        bcrypt.compareSync(request.password, this.password, function (error, isMatch) {
+          if (!isMatch) {
+            // Reject non-matched passwords
+            reject('Wrong username or password')
+          } else {
+            // set an active session with user credentials here
+
+            // return user object
+            resolve(user)
+          }
+        })
       }
     })
   })

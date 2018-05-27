@@ -122,17 +122,23 @@
 
       },
       async confirmUser() {
-        await UserService.fetchByEmail(this.user.email).then(res => {
+        console.log(this.user.password)
+        await UserService.fetchByEmail(this.user).then(res => {
           if (res.data.errors) {
             this.errors = res.data.errors
+            console.log(this.errors)
 //            this.errorMsg('Please fill out all form fields')
           } else {
-            if (res.data === false) {
-              console.log('DID NOT FIND EMAIL')
-              this.invalidCredentials = true // display this somewhere to show bad credentials
-            } else {
-              this.validUser = true // display this somewhere to know successful credentials
-            }
+            console.log(res.data)
+            this.validUser = true // display this somewhere to know successful credentials
+//            if (res.data === false) {
+//              console.log('DID NOT FIND EMAIL')
+//              console.log(res.data.message)
+//              this.invalidCredentials = true // display this somewhere to show bad credentials
+//            } else {
+//              console.log(res.data)
+//              this.validUser = true // display this somewhere to know successful credentials
+//            }
           }
         })
       }

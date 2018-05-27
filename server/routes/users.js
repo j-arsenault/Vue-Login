@@ -1,5 +1,7 @@
 let Users = require("../models/users")
 let path = '/api';
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy;
 
 module.exports = (app) => {
   // Add new user
@@ -42,8 +44,8 @@ module.exports = (app) => {
 
   // Fetch single user by email
   app.get(`${path}/users/email/:email`, (req, res) => {
-    // console.log("request = " + req.params.email)
-    Users.fetchByEmail(req.params.email).then(
+    console.log("request = " + JSON.stringify(req.params))
+    Users.fetchByEmail(req.params).then(
       (user) => {
         res.send(user)
       },
