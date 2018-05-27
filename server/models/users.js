@@ -102,89 +102,8 @@ function addUser(firstName, lastName, email, password) {
   })
 }
 
-// function fetchByEmail(email, password, done) {
-//   passport.use(new LocalStrategy(
-//     // return new Promise((resolve, reject) => {
-//     Users.findOne({email: email}, function (error, user) {
-//       if (err) {
-//         console.log(err)
-//         return done(err)
-//       }
-//       if (!user) {
-//         console.log('NO USER BY THAT EMAIL')
-//         return done(null, false, {message: 'Incorrect email'})
-//       }
-//       if (!user.validPassword(password)) {
-//         console.log('PASSWORDS DO NOT MATCH')
-//         return done(null, false, {message: 'Incorrect password.'})
-//       }
-//       return done(null, user)
-      // if (error) {
-      //   reject(error)
-      //   console.log(error)
-      // }
-      // else if (!user) {
-      //   console.log('NO USER BY THAT EMAIL')
-      //   resolve({message: 'Incorrect email!'})
-      // }
-      // else if (!user.validPassword(password)) {
-      //   console.log('PASSWORDS DO NOT MATCH')
-      //   resolve(false, {message: 'Incorrect password.'})
-      // }
-      // else {
-      //   console.log('FOUND USER')
-      //   resolve(user)
-      // }
 
-    // })
-  // })
-// ))
-// }
-
-  // function fetchByEmail(user, done) {
-  //   Users.findOne({email: user.email}, function (err, user) {
-  //     if (err) {
-  //       return done(err);
-  //     }
-  //     if (!user) {
-  //       return done(null, false, {message: 'Incorrect email'});
-  //     }
-  //     if (!user.validPassword(user.password)) {
-  //       return done(null, false, {message: 'Incorrect password.'});
-  //     }
-  //     return done(null, user);
-  //   });
-  // }
-
-  // function fetchByEmail(user) {
-  //   return new Promise((resolve, reject) => {
-  //     Users.findOne({ email: user.email}, function (error, user) {
-  //       if (error) {
-  //         reject(error)
-  //         console.log(error)
-  //       } else {
-  //         resolve(user ? user : false)
-  //       }
-  //     })
-  //   })
-  // }
-
-  // function(username, password, done) {
-  //   User.findOne({ username: username }, function(err, user) {
-  //     if (err) { return done(err); }
-  //     if (!user) {
-  //       return done(null, false, { message: 'Incorrect username.' });
-  //     }
-  //     if (!user.validPassword(password)) {
-  //       return done(null, false, { message: 'Incorrect password.' });
-  //     }
-  //     return done(null, user);
-  //   });
-  // }
-// ));
-
-
-function fetchByEmail(request) {
+function loginUser(request) {
   console.log('Email = ' + request.email)
   console.log('Password = ' + request.password)
   return new Promise((resolve, reject) => {
@@ -195,6 +114,7 @@ function fetchByEmail(request) {
       } else if (!user) {
         reject('Email does not exist!')
       } else {
+        console.log('USER FOUND')
         bcrypt.compareSync(request.password, this.password, function (error, isMatch) {
           if (!isMatch) {
             // Reject non-matched passwords
@@ -269,7 +189,7 @@ function compareHash(email) {
 module.exports = {
   addUser,
   fetchOne,
-  fetchByEmail,
   updateOne,
-  removeOne
+  removeOne,
+  loginUser
 }

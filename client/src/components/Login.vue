@@ -122,8 +122,7 @@
 
       },
       async confirmUser() {
-        console.log(this.user.password)
-        await UserService.fetchByEmail(this.user).then(res => {
+        await UserService.loginUser(this.user).then(res => {
           if (res.data.errors) {
             this.errors = res.data.errors
             console.log(this.errors)
