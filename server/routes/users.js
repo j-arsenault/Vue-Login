@@ -31,8 +31,8 @@ module.exports = (app) => {
   // Fetch single user
   app.get(`${path}/users/:id`, (req, res) => {
     Users.fetchOne(req.params.id).then(
-      (player) => {
-        res.send(player)
+      (user) => {
+        res.send(user)
       },
       (err) => {
         console.error(err)
@@ -44,8 +44,8 @@ module.exports = (app) => {
   app.get(`${path}/users/email/:email`, (req, res) => {
     // console.log("request = " + req.params.email)
     Users.fetchByEmail(req.params.email).then(
-      (player) => {
-        res.send(player)
+      (user) => {
+        res.send(user)
       },
       (err) => {
         console.error(err)

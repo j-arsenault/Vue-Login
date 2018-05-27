@@ -5,7 +5,10 @@
         <div class="columns is-centered">
           <div class="column is-half">
             <div class="notification is-success" v-if="validUser">
-              Valid User - Successful Sign In
+              Valid User - Email Exists
+            </div>
+            <div class="notification is-danger" v-if="invalidCredentials">
+              Email does not exist
             </div>
             <div class="card">
               <div class="card-content">
@@ -36,7 +39,7 @@
                   <div class="control has-icons-left has-icons-right">
                     <input
                       class="input"
-                      type="email"
+                      type="password"
                       v-model="user.password"
                       v-on:input="checkFormFields"
                       v-bind:class="{'is-danger': errors.password, 'is-danger': error.password }"
@@ -84,6 +87,7 @@
         },
         errors: {},
         validUser: false,
+        invalidCredentials: false,
         error: {
           email: '',
           password: ''
@@ -92,6 +96,8 @@
     },
     methods: {
       checkFormFields:  _.debounce(function () {
+        this.invalidCredentials = false
+        this.validUser = false
         if (this.user.email) {
           this.error.email = ''
         }
@@ -119,12 +125,14 @@
         await UserService.fetchByEmail(this.user.email).then(res => {
           if (res.data.errors) {
             this.errors = res.data.errors
-            console.log('ERRORS RETURNED :::::: ')
-            console.log(this.errors)
 //            this.errorMsg('Please fill out all form fields')
           } else {
-            this.validUser = true // display this somewhere to know successful credentials
-            //this.$router.push({name: 'Landing'})
+            if (res.data === false) {
+              console.log('DID NOT FIND EMAIL')
+              this.invalidCredentials = true // display this somewhere to show bad credentials
+            } else {
+              this.validUser = true // display this somewhere to know successful credentials
+            }
           }
         })
       }
