@@ -5,6 +5,6 @@ export default {
     return Api().post('users', params);
   },
   fetchByEmail(params) {
-    return Api().get('users/email/' + params.email)
+    return Api().get('users/login/' + params.email)
   }
 }
