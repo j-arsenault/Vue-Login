@@ -5,8 +5,6 @@ const moment = require('moment')
 const UIDGenerator = require('uid-generator')
 const _ = require('lodash')
 const uniqueValidator = require('mongoose-unique-validator')
-// const passport = require('passport')
-// const LocalStrategy = require('passport-local').Strategy;
 
 
 const schema = {

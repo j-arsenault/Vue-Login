@@ -44,7 +44,6 @@ module.exports = (app) => {
 
   // Login user
   app.post(`${path}/login`, (req, res) => {
-    console.log("request = " + JSON.stringify(req.body.email))
     Users.loginUser(req.body).then(
       (user) => {
         res.send(user)

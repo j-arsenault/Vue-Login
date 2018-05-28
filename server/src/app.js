@@ -2,14 +2,12 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const logger = require('morgan')
-const passport = require("passport")
 
 const app = express()
 app.use(logger('combined'))
 app.use(bodyParser.json())
 app.use(cors())
-app.use(passport.initialize())
-app.use(passport.session())
+
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/login')
