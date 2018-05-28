@@ -68,10 +68,6 @@ Users.schema.pre('save', function(next) {
   })
 })
 
-// Users.schema.methods.validPassword = function(password) {
-//   return bcrypt.compareSync(password, this.password)
-// };
-
 
 function addUser(firstName, lastName, email, password) {
   const uidgen = new UIDGenerator(512, UIDGenerator.BASE62)

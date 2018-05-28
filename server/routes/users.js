@@ -1,7 +1,5 @@
 let Users = require("../models/users")
 let path = '/api';
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy;
 
 module.exports = (app) => {
   // Add new user
