@@ -4,7 +4,7 @@ let path = '/api';
 module.exports = (app) => {
   // Add new user
   app.post(`${path}/users`, (req, res) => {
-    Users.addUser(req.body.firstName, req.body.firstName, req.body.email, req.body.password).then(
+    Users.addUser(req.body).then(
       (message) => {
         res.send(message)
       },

@@ -69,13 +69,13 @@ Users.schema.pre('save', function(next) {
 })
 
 
-function addUser(firstName, lastName, email, password) {
+function addUser(request) {
   const uidgen = new UIDGenerator(512, UIDGenerator.BASE62)
   let new_user = new Users({
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    password: password,
+    firstName: request.firstName,
+    lastName: request.lastName,
+    email: request.email,
+    password: request.password,
     emailConfirmationToken: uidgen.generateSync(UIDGenerator.BASE16),
     active: this.active,
     role: this.role,
@@ -85,13 +85,20 @@ function addUser(firstName, lastName, email, password) {
     new_user.save(function (error, user) {
       if (error) {
         reject(error)
+      } else {
+        // remove user: user, once done testing
+        let cleanUser = user.toObject()
+        delete cleanUser._id
+        delete cleanUser.password
+        delete cleanUser.__v
+        delete cleanUser.emailConfirmationToken
+        cleanUser.password = ''
+        resolve({
+          user: cleanUser,
+          success: true,
+          message: 'You\'ve successfully signed up!'
+        })
       }
-      // remove user: user, once done testing
-      resolve({
-        user: user,
-        success: true,
-        message: 'You\'ve successfully signed up!'
-      })
     })
   })
 }
@@ -101,26 +108,35 @@ function loginUser(request) {
   console.log('Email = ' + request.email)
   console.log('Password = ' + request.password)
   return new Promise((resolve, reject) => {
-    Users.findOne({ email: request.email}, function (error, user) {
-      if (error) {
-        reject(error)
-        console.log(error)
-      } else if (!user) {
-        reject('Email does not exist!')
-      } else {
-        bcrypt.compare(request.password, user.password, function (error, isMatch) {
-          if (!isMatch) {
-            console.log('NO MATCH!')
-            // Reject non-matched passwords
-            reject('Wrong username or password')
-          } else {
-            // set an active session with user credentials here
-            console.log('EMAIL + PASSWORDS MATCH!')
-            // return user object
-            resolve(user)
-          }
-        })
-      }
+    Users.
+      findOne({ email: request.email})
+      .where('active').equals(true)
+      .exec(function (error, user) {
+        if (error) {
+          reject(error)
+          console.log(error)
+        } else if (!user) {
+          reject('Email does not exist!')
+        } else {
+          bcrypt.compare(request.password, user.password, function (error, isMatch) {
+            if (!isMatch) {
+              console.log('NO MATCH!')
+              // Reject non-matched passwords
+              reject('Wrong username or password')
+            } else {
+              // set an active session with user credentials here
+              console.log('EMAIL + PASSWORDS MATCH!')
+              // return clean user object
+              let cleanUser = user.toObject()
+              delete cleanUser._id
+              delete cleanUser.password
+              delete cleanUser.__v
+              delete cleanUser.emailConfirmationToken
+              cleanUser.password = ''
+              resolve(cleanUser)
+            }
+          })
+        }
     })
   })
 }
