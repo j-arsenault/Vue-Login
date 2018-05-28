@@ -40,10 +40,9 @@ module.exports = (app) => {
     )
   })
 
-  // Fetch single user by email
-  app.get(`${path}/users/email/:email`, (req, res) => {
-    // console.log("request = " + req.params.email)
-    Users.fetchByEmail(req.params.email).then(
+  // Login user
+  app.post(`${path}/login`, (req, res) => {
+    Users.loginUser(req.body).then(
       (user) => {
         res.send(user)
       },

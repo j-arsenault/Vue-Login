@@ -31,6 +31,12 @@
           </span>
           <span>Signup</span>
         </router-link>
+        <router-link v-bind:to="{ name: 'Landing' }" class="navbar-item" active-class="link-is-active" exact>
+          <span class="icon ">
+            <i class="fas fa-sign-out-alt"></i>
+          </span>
+          <span>Logout</span>
+        </router-link>
       </div>
     </div>
   </nav>

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const UIDGenerator = require('uid-generator')
 const _ = require('lodash')
-const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require('mongoose-unique-validator')
 
 
 const schema = {
@@ -49,6 +49,7 @@ const schema = {
     default: moment().format()
   }
 }
+
 
 const Users = dbfactory("Users", schema)
 
@@ -95,14 +96,30 @@ function addUser(firstName, lastName, email, password) {
   })
 }
 
-function fetchByEmail(email) {
+
+function loginUser(request) {
+  console.log('Email = ' + request.email)
+  console.log('Password = ' + request.password)
   return new Promise((resolve, reject) => {
-    Users.findOne({ email: email}, function (error, user) {
+    Users.findOne({ email: request.email}, function (error, user) {
       if (error) {
         reject(error)
         console.log(error)
+      } else if (!user) {
+        reject('Email does not exist!')
       } else {
-        resolve(user ? user : false)
+        bcrypt.compare(request.password, user.password, function (error, isMatch) {
+          if (!isMatch) {
+            console.log('NO MATCH!')
+            // Reject non-matched passwords
+            reject('Wrong username or password')
+          } else {
+            // set an active session with user credentials here
+            console.log('EMAIL + PASSWORDS MATCH!')
+            // return user object
+            resolve(user)
+          }
+        })
       }
     })
   })
@@ -166,7 +183,7 @@ function compareHash(email) {
 module.exports = {
   addUser,
   fetchOne,
-  fetchByEmail,
   updateOne,
-  removeOne
+  removeOne,
+  loginUser
 }

@@ -4,7 +4,7 @@ export default {
   addUser(params) {
     return Api().post('users', params);
   },
-  fetchByEmail(params) {
-    return Api().get('users/email/' + params)
+  loginUser(params) {
+    return Api().post('login', params)
   },
 }
