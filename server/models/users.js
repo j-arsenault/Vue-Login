@@ -87,8 +87,14 @@ function addUser(firstName, lastName, email, password) {
         reject(error)
       }
       // remove user: user, once done testing
+      let cleanUser = user.toObject()
+      delete cleanUser._id
+      delete cleanUser.password
+      delete cleanUser.__v
+      delete cleanUser.emailConfirmationToken
+      cleanUser.password = ''
       resolve({
-        user: user,
+        user: cleanUser,
         success: true,
         message: 'You\'ve successfully signed up!'
       })
@@ -116,8 +122,14 @@ function loginUser(request) {
           } else {
             // set an active session with user credentials here
             console.log('EMAIL + PASSWORDS MATCH!')
-            // return user object
-            resolve(user)
+            // return clean user object
+            let cleanUser = user.toObject()
+            delete cleanUser._id
+            delete cleanUser.password
+            delete cleanUser.__v
+            delete cleanUser.emailConfirmationToken
+            cleanUser.password = ''
+            resolve(cleanUser)
           }
         })
       }
