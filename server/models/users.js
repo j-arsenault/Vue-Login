@@ -114,14 +114,14 @@ function loginUser(request) {
       } else if (!user) {
         reject('Email does not exist!')
       } else {
-        console.log('USER FOUND')
-        bcrypt.compareSync(request.password, this.password, function (error, isMatch) {
+        bcrypt.compare(request.password, user.password, function (error, isMatch) {
           if (!isMatch) {
+            console.log('NO MATCH!')
             // Reject non-matched passwords
             reject('Wrong username or password')
           } else {
             // set an active session with user credentials here
-
+            console.log('EMAIL + PASSWORDS MATCH!')
             // return user object
             resolve(user)
           }
