@@ -69,13 +69,13 @@ Users.schema.pre('save', function(next) {
 })
 
 
-function addUser(firstName, lastName, email, password) {
+function addUser(request) {
   const uidgen = new UIDGenerator(512, UIDGenerator.BASE62)
   let new_user = new Users({
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    password: password,
+    firstName: request.firstName,
+    lastName: request.lastName,
+    email: request.email,
+    password: request.password,
     emailConfirmationToken: uidgen.generateSync(UIDGenerator.BASE16),
     active: this.active,
     role: this.role,
@@ -85,19 +85,20 @@ function addUser(firstName, lastName, email, password) {
     new_user.save(function (error, user) {
       if (error) {
         reject(error)
+      } else {
+        // remove user: user, once done testing
+        let cleanUser = user.toObject()
+        delete cleanUser._id
+        delete cleanUser.password
+        delete cleanUser.__v
+        delete cleanUser.emailConfirmationToken
+        cleanUser.password = ''
+        resolve({
+          user: cleanUser,
+          success: true,
+          message: 'You\'ve successfully signed up!'
+        })
       }
-      // remove user: user, once done testing
-      let cleanUser = user.toObject()
-      delete cleanUser._id
-      delete cleanUser.password
-      delete cleanUser.__v
-      delete cleanUser.emailConfirmationToken
-      cleanUser.password = ''
-      resolve({
-        user: cleanUser,
-        success: true,
-        message: 'You\'ve successfully signed up!'
-      })
     })
   })
 }
