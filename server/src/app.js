@@ -1,8 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const logger = require('morgan')
 const session = require('express-session')
+const mongoStore = require('connect-mongo')(session)
+
 
 const app = express()
 app.use(logger('combined'))
@@ -28,8 +31,12 @@ app.use(session({
     httpOnly: true,
     maxAge: 30 * 24 * 60 * 60 * 1000,  // 1 month cookie
     secure: false // true requires an https-enabled website
-  }
+  },
+  store: new mongoStore({mongooseConnection: db})
 }))
+
+// config cookie parser middleware
+app.use(cookieParser())
 
 
 // configure routes here
