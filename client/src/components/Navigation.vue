@@ -14,7 +14,7 @@
     <div id="navbarExampleTransparentExample" class="navbar-menu">
       <div class="navbar-start">
         <router-link v-bind:to="{ name: 'Landing' }" class="navbar-item" active-class="link-is-active" exact>
-          <span>Home</span>
+          <span>About</span>
         </router-link>
       </div>
 
@@ -31,7 +31,13 @@
           </span>
           <span>Signup</span>
         </router-link>
-        <router-link v-bind:to="{ name: 'Landing' }" class="navbar-item" active-class="link-is-active" exact>
+        <router-link v-bind:to="{ name: 'Profile' }" class="navbar-item" active-class="link-is-active" exact>
+          <span class="icon ">
+            <i class="fas fa-user-circle"></i>
+          </span>
+          <span>Profile</span>
+        </router-link>
+        <router-link v-bind:to="{ name: 'Landing' }" class="navbar-item" exact>
           <span class="icon ">
             <i class="fas fa-sign-out-alt"></i>
           </span>

@@ -128,6 +128,9 @@
             console.log(this.errors)
 //            this.errorMsg('Please fill out all form fields')
           } else {
+//            if (res.data.err.status === 401) {
+//              console.log('WRONG EMAIL OR PASSWORD')
+//            }
             console.log(res.data)
             this.validUser = true // display this somewhere to know successful credentials
 //            if (res.data === false) {

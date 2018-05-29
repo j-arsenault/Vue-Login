@@ -18,6 +18,19 @@ db.once("open", function(callback){
   console.log("Connection Succeeded")
 })
 
+app.set('trust proxy', 1) // trust first proxy
+// track login sessions
+app.use(session({
+  secret: 'doin thangs',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,  // 1 month cookie
+    secure: false // true requires an https-enabled website
+  }
+}))
+
 
 // configure routes here
 require('../routes/users')(app)

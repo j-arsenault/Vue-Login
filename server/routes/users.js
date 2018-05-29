@@ -44,6 +44,13 @@ module.exports = (app) => {
   app.post(`${path}/login`, (req, res) => {
     Users.loginUser(req.body).then(
       (user) => {
+        req.session.userId = user._id
+        console.log("user id = " + user._id)
+        console.log('CURRENT SESSION.....')
+
+        console.log("User Id", req.session.userId)
+        console.log("Sesson Data....\n", req.session)
+
         res.send(user)
       },
       (err) => {
