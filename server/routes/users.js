@@ -54,9 +54,16 @@ module.exports = (app) => {
         res.send(user)
       },
       (err) => {
+        // res.send(err
         console.error(err)
       }
     )
+  })
+
+  // test session
+  app.get(`${path}/session`, (req, res) => {
+    let sessionUserId = req.session
+    res.send(`Print out session details: ${JSON.stringify(sessionUserId)}`);
   })
 
   // Update a user
