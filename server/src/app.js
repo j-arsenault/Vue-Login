@@ -24,7 +24,7 @@ db.once("open", function(callback){
 app.set('trust proxy', 1) // trust first proxy
 // track login sessions
 app.use(session({
-  secret: 'doin thangs',
+  secret: 'doin thangs',  // for development only
   resave: false,
   saveUninitialized: true,
   cookie: {
