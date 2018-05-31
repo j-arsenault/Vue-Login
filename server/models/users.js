@@ -114,23 +114,23 @@ function loginUser(request) {
           reject(error)
           console.log(error)
         } else if (!user) {
-          reject('Email does not exist!')
+          let err = new Error('Email does not exist')
+          err.status = 400
+          reject(err)
+          // reject(new Error('Email does not exist'))
         } else {
           bcrypt.compare(request.password, user.password, function (error, isMatch) {
             if (!isMatch) {
-              console.log('NO MATCH!')
-              // // Reject non-matched passwords
-              // reject('Wrong username or password')
-
-              let err = new Error('Wrong email or password.');
-              err.status = 401;
-              resolve(err);
-
-
-
+              let err = new Error('Wrong email or password.')
+              err.status = 401
+              reject(err)
             } else {
-              // set an active session with user credentials here
-              console.log('EMAIL + PASSWORDS MATCH!')
+              /***
+               * Not sure if this should be set here???
+               *  or in routes/users.js and passed over to front end?
+               */
+              //req.session.userId = user._id
+
               // return clean user object
               let cleanUser = user.toObject()
               delete cleanUser.password

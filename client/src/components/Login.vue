@@ -4,11 +4,11 @@
       <div class="container">
         <div class="columns is-centered">
           <div class="column is-half">
-            <div class="notification is-success" v-if="validUser">
+            <div class="notification is-success has-text-centered" v-if="validUser">
               Valid User - Email Exists
             </div>
-            <div class="notification is-danger" v-if="invalidCredentials">
-              Email does not exist
+            <div class="notification is-danger has-text-centered" v-if="invalidCredentials">
+              {{ invalidMessage }}
             </div>
             <div class="card">
               <div class="card-content">
@@ -88,6 +88,7 @@
         errors: {},
         validUser: false,
         invalidCredentials: false,
+        invalidMessage: '',
         error: {
           email: '',
           password: ''
@@ -96,6 +97,7 @@
     },
     methods: {
       checkFormFields:  _.debounce(function () {
+        this.invalidMessage = ''
         this.invalidCredentials = false
         this.validUser = false
         if (this.user.email) {
@@ -124,23 +126,19 @@
       async confirmUser() {
         await UserService.loginUser(this.user).then(res => {
           if (res.data.errors) {
+            console.log('THERE ARE ERRORS')
             this.errors = res.data.errors
             console.log(this.errors)
 //            this.errorMsg('Please fill out all form fields')
+          } else if (res.data.status === 400) {
+            this.invalidMessage = 'Email does not exist!'
+            this.invalidCredentials = true // display this somewhere to show bad credentials
+          } else if (res.data.status === 401) {
+            this.invalidMessage = 'Invalid email or password!'
+            this.invalidCredentials = true // display this somewhere to show bad credentials
           } else {
-//            if (res.data.err.status === 401) {
-//              console.log('WRONG EMAIL OR PASSWORD')
-//            }
-            console.log(res.data)
+            console.log(res) // display content being sent back.....
             this.validUser = true // display this somewhere to know successful credentials
-//            if (res.data === false) {
-//              console.log('DID NOT FIND EMAIL')
-//              console.log(res.data.message)
-//              this.invalidCredentials = true // display this somewhere to show bad credentials
-//            } else {
-//              console.log(res.data)
-//              this.validUser = true // display this somewhere to know successful credentials
-//            }
           }
         })
       }

@@ -44,18 +44,14 @@ module.exports = (app) => {
   app.post(`${path}/login`, (req, res) => {
     Users.loginUser(req.body).then(
       (user) => {
+        /*** NOT SURE IF I should set the session in model and pass over
+         *  user object upon successful login?
+         */
         req.session.userId = user._id
-        console.log("user id = " + user._id)
-        console.log('CURRENT SESSION.....')
-
-        console.log("User Id", req.session.userId)
-        console.log("Sesson Data....\n", req.session)
-
-        res.send(user)
+        res.send(req.session)
       },
       (err) => {
-        // res.send(err
-        console.error(err)
+        res.send(err)
       }
     )
   })
@@ -63,7 +59,7 @@ module.exports = (app) => {
   // test session
   app.get(`${path}/session`, (req, res) => {
     let sessionUserId = req.session
-    res.send(`Print out session details: ${JSON.stringify(sessionUserId)}`);
+    res.send(`Print out session details: ${JSON.stringify(sessionUserId)} \n sessoin id = ${JSON.stringify(sessionUserId.id)}`);
   })
 
   // Update a user
