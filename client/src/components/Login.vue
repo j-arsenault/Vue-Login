@@ -75,7 +75,7 @@
 
 <script>
   import _ from 'lodash';
-  import UserService from '@/services/UserService'
+  import Authentication from '@/services/Authentication'
 
   export default {
     name: 'Login',
@@ -124,7 +124,7 @@
 
       },
       async confirmUser() {
-        await UserService.loginUser(this.user).then(res => {
+        await Authentication.loginUser(this.user).then(res => {
           if (res.data.errors) {
             console.log('THERE ARE ERRORS')
             this.errors = res.data.errors
@@ -139,6 +139,9 @@
           } else {
             console.log(res) // display content being sent back.....
             this.validUser = true // display this somewhere to know successful credentials
+
+            // redirect to profile
+
           }
         })
       }

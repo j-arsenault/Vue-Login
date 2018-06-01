@@ -1,5 +1,5 @@
 let Users = require("../models/users")
-let path = '/api';
+let path = '/api/v1';
 
 module.exports = (app) => {
   // Add new user
@@ -41,14 +41,11 @@ module.exports = (app) => {
   })
 
   // Login user
-  app.post(`${path}/login`, (req, res) => {
+  app.post(`${path}/auth/login`, (req, res) => {
     Users.loginUser(req.body).then(
       (user) => {
-        /*** NOT SURE IF I should set the session in model and pass over
-         *  user object upon successful login?
-         */
         req.session.userId = user._id
-        res.send(req.session)
+        res.send(user)
       },
       (err) => {
         res.send(err)
@@ -57,7 +54,7 @@ module.exports = (app) => {
   })
 
   // test session
-  app.get(`${path}/session`, (req, res) => {
+  app.get(`${path}/auth/session`, (req, res) => {
     let sessionUserId = req.session
     res.send(`Print out session details: ${JSON.stringify(sessionUserId)} \n sessoin id = ${JSON.stringify(sessionUserId.id)}`);
   })
