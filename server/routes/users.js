@@ -1,5 +1,5 @@
 let Users = require("../models/users")
-let path = '/api';
+let path = '/api/v1';
 
 module.exports = (app) => {
   // Add new user
@@ -41,15 +41,22 @@ module.exports = (app) => {
   })
 
   // Login user
-  app.post(`${path}/login`, (req, res) => {
+  app.post(`${path}/auth/login`, (req, res) => {
     Users.loginUser(req.body).then(
       (user) => {
+        req.session.userId = user._id
         res.send(user)
       },
       (err) => {
-        console.error(err)
+        res.send(err)
       }
     )
+  })
+
+  // test session
+  app.get(`${path}/auth/session`, (req, res) => {
+    let sessionUserId = req.session
+    res.send(`Print out session details: ${JSON.stringify(sessionUserId)} \n sessoin id = ${JSON.stringify(sessionUserId.id)}`);
   })
 
   // Update a user
