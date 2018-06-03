@@ -6,7 +6,7 @@ const UIDGenerator = require('uid-generator')
 const _ = require('lodash')
 const uniqueValidator = require('mongoose-unique-validator')
 const sgMail = require('@sendgrid/mail')
-require('dotenv').config()
+require('dotenv').config({path:'./config/sendgrid.env'})
 
 
 const schema = {
