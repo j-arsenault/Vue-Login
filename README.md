@@ -49,3 +49,21 @@ Once running you can test server by going to `http://localhost:8081/api/users`
 You sould see the following
 
 ![Image](https://i.imgur.com/Qo6KxyX.png)
+____________________________
+
+# Testing SendGrid Localy
+1. In server directory, create a new directory called `config`
+```sh
+$ cd server
+$ mkdir config
+```
+2. Create a `.env` file for sendgrid variables
+```sh
+$ echo "SENDGRID_API_KEY='YOUR_API_KEY'" > sendgrid.env
+```
+3. Open up `sendgrid.env` and edit it to the following
+```sh
+SENDGRID_API_KEY='YOUR_SENDGRID_API_KEY_HERE'
+NO_REPLY_EMAIL='do_not_reply@example.com'
+SUBJECT='Custome subject....'
+```
