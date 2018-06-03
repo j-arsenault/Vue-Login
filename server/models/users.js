@@ -5,6 +5,8 @@ const moment = require('moment')
 const UIDGenerator = require('uid-generator')
 const _ = require('lodash')
 const uniqueValidator = require('mongoose-unique-validator')
+const sgMail = require('@sendgrid/mail')
+require('dotenv').config({path:'./config/sendgrid.env'})
 
 
 const schema = {
@@ -86,6 +88,9 @@ function addUser(request) {
       if (error) {
         reject(error)
       } else {
+        // Send email verification
+        sendEmailVerification(user)
+
         // remove user: user, once done testing
         let cleanUser = user.toObject()
         delete cleanUser._id
@@ -183,13 +188,15 @@ function removeOne(id) {
   })
 }
 
-function generateHash(password) {
-  let salt = bcrypt.genSaltSync(10)
-  return  bcrypt.hashSync(password, salt)
-}
-
-function compareHash(email) {
-  return bcrypt.compare(email, hashedPassword)
+function sendEmailVerification(user) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+  const msg = {
+    to: user.email,
+    from:  process.env.NO_REPLY_EMAIL,
+    subject: process.env.SUBJECT,
+    html: '<p>Hello, thank you for signing up with <strong>Lynxmasters</strong>!<br>Please click the following link to verify your email.<br></p><a href="http://localhost:8080/?id=' + user._id +'&email_id=' + user.emailConfirmationToken + '" target="_blank">Verify your email for Lynxmasters</a>',
+  };
+  sgMail.send(msg)
 }
 
 module.exports = {
