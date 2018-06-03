@@ -105,8 +105,6 @@ function addUser(request) {
 
 
 function loginUser(request) {
-  console.log('Email = ' + request.email)
-  console.log('Password = ' + request.password)
   return new Promise((resolve, reject) => {
     Users.
       findOne({ email: request.email})
@@ -114,21 +112,19 @@ function loginUser(request) {
       .exec(function (error, user) {
         if (error) {
           reject(error)
-          console.log(error)
         } else if (!user) {
-          reject('Email does not exist!')
+          let err = new Error('Email does not exist')
+          err.status = 400
+          reject(err)
         } else {
           bcrypt.compare(request.password, user.password, function (error, isMatch) {
             if (!isMatch) {
-              console.log('NO MATCH!')
-              // Reject non-matched passwords
-              reject('Wrong username or password')
+              let err = new Error('Wrong email or password.')
+              err.status = 401
+              reject(err)
             } else {
-              // set an active session with user credentials here
-              console.log('EMAIL + PASSWORDS MATCH!')
               // return clean user object
               let cleanUser = user.toObject()
-              delete cleanUser._id
               delete cleanUser.password
               delete cleanUser.__v
               delete cleanUser.emailConfirmationToken
