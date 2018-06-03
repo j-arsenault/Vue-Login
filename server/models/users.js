@@ -9,7 +9,6 @@ const sgMail = require('@sendgrid/mail')
 require('dotenv').config()
 
 
-
 const schema = {
   firstName: {
     type: String,
@@ -89,17 +88,8 @@ function addUser(request) {
       if (error) {
         reject(error)
       } else {
-
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-        const msg = {
-          to: 'ian_arsenault@protonmail.com',
-          from: 'test@example.com',
-          subject: 'Sending with SendGrid is Fun',
-          text: 'http://localhost:8080/?id=NUMBER&email_id=NUMBER',
-          html: '<a href="http://localhost:8080/?id=' + user._id +'&email_id=' + user.emailConfirmationToken + '" target="_blank">Verify your email for Lynxmasters</a>',
-        };
-        sgMail.send(msg)
-
+        // Send email verification
+        sendEmailVerification(user)
 
         // remove user: user, once done testing
         let cleanUser = user.toObject()
@@ -202,13 +192,15 @@ function removeOne(id) {
   })
 }
 
-function generateHash(password) {
-  let salt = bcrypt.genSaltSync(10)
-  return  bcrypt.hashSync(password, salt)
-}
-
-function compareHash(email) {
-  return bcrypt.compare(email, hashedPassword)
+function sendEmailVerification(user) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+  const msg = {
+    to: user.email,
+    from:  process.env.NO_REPLY_EMAIL,
+    subject: process.env.SUBJECT,
+    html: '<p>Hello, thank you for signing up with <strong>Lynxmasters</strong>!<br>Please click the following link to verify your email.<br></p><a href="http://localhost:8080/?id=' + user._id +'&email_id=' + user.emailConfirmationToken + '" target="_blank">Verify your email for Lynxmasters</a>',
+  };
+  sgMail.send(msg)
 }
 
 module.exports = {
