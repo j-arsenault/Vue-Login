@@ -1,5 +1,7 @@
 let Users = require("../models/users")
-let path = '/api';
+const sgMail = require('@sendgrid/mail')
+// require('dotenv').config()
+let path = '/api'
 
 module.exports = (app) => {
   // Add new user

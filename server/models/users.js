@@ -5,6 +5,9 @@ const moment = require('moment')
 const UIDGenerator = require('uid-generator')
 const _ = require('lodash')
 const uniqueValidator = require('mongoose-unique-validator')
+const sgMail = require('@sendgrid/mail')
+require('dotenv').config()
+
 
 
 const schema = {
@@ -86,6 +89,18 @@ function addUser(request) {
       if (error) {
         reject(error)
       } else {
+
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+        const msg = {
+          to: 'ian_arsenault@protonmail.com',
+          from: 'test@example.com',
+          subject: 'Sending with SendGrid is Fun',
+          text: 'http://localhost:8080/?id=NUMBER&email_id=NUMBER',
+          html: '<a href="http://localhost:8080/?id=' + user._id +'&email_id=' + user.emailConfirmationToken + '" target="_blank">Verify your email for Lynxmasters</a>',
+        };
+        sgMail.send(msg)
+
+
         // remove user: user, once done testing
         let cleanUser = user.toObject()
         delete cleanUser._id
