@@ -44,7 +44,7 @@ $ npm run dev:pc
 ```
 
 
-Once running you can test server by going to `http://localhost:8081/api/users`
+Once running you can test server by going to `http://localhost:8081/api/v1/users`
 
 You sould see the following
 
@@ -56,6 +56,7 @@ ____________________________
 ```sh
 $ cd server
 $ mkdir config
+$ cd config
 ```
 2. Create a `.env` file for sendgrid variables
 ```sh
