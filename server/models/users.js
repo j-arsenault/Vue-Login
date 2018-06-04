@@ -89,7 +89,7 @@ function addUser(request) {
         reject(error)
       } else {
         // Send email verification
-        sendEmailVerification(user)
+        //sendEmailVerification(user)
 
         // remove user: user, once done testing
         let cleanUser = user.toObject()

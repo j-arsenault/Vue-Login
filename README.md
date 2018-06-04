@@ -51,7 +51,7 @@ You sould see the following
 ![Image](https://i.imgur.com/Qo6KxyX.png)
 ____________________________
 
-# Testing SendGrid Localy
+# Testing SendGrid Locally
 1. In server directory, create a new directory called `config`
 ```sh
 $ cd server
@@ -68,3 +68,10 @@ SENDGRID_API_KEY='YOUR_SENDGRID_API_KEY_HERE'
 NO_REPLY_EMAIL='do_not_reply@example.com'
 SUBJECT='Custome subject....'
 ```
+4. Uncomment line 92 in `server/models/users.js` like so..
+```js
+} else {
+    // Send email verification
+    sendEmailVerification(user)
+```
+5. Sendgrid will now work
